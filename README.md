@@ -1,4 +1,5 @@
 # A simple memorizing card game
+[Play here](https://jasonchan1129.github.io/ac-cardgame/)
 ## Purpose of the project
 To practise using Model–view–controller (MVC) design pattern.
 ## How to play
