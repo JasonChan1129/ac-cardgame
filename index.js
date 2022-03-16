@@ -62,19 +62,6 @@ const view = {
 			card.style.transform = 'rotateY(360deg)';
 		});
 	},
-	// flipCards(...cards) {
-	// 	cards.forEach(card => {
-	// 		if (card.classList.contains('back')) {
-	// 			// flip to front
-	// 			card.classList.remove('back');
-	// 			card.innerHTML = this.getCardContent(Number(card.dataset.index));
-	// 		} else {
-	// 			// flip to back
-	// 			card.classList.add('back');
-	// 			card.innerHTML = null;
-	// 		}
-	// 	});
-	// },
 	pairCards(...cards) {
 		cards.forEach(card => {
 			card.classList.add('paired');
@@ -110,17 +97,6 @@ const view = {
 	},
 };
 
-const ultility = {
-	getRandomNumberArray(count) {
-		const number = [...Array(count).keys()];
-		for (let index = number.length - 1; index > 0; index--) {
-			const randomIndex = Math.floor(Math.random() * (index + 1));
-			[number[index], number[randomIndex]] = [number[randomIndex], number[index]];
-		}
-		return number;
-	},
-};
-
 const model = {
 	revealedCards: [],
 	score: 0,
@@ -139,10 +115,6 @@ const controller = {
 		view.displayCards(ultility.getRandomNumberArray(52));
 	},
 	dispatchCardAction(card) {
-		// if card has already been opened
-		// if (!card.classList.contains('back')) {
-		// 	return;
-		// }
 		switch (this.currentState) {
 			case GAME_STATE.FirstCardAwaits:
 				view.flipToFront(card);
@@ -174,7 +146,6 @@ const controller = {
 				}
 				break;
 		}
-		console.log(model.score, model.triedTimes);
 	},
 	resetCards() {
 		view.flipToBack(...model.revealedCards);
@@ -183,11 +154,22 @@ const controller = {
 	},
 };
 
+const ultility = {
+	getRandomNumberArray(count) {
+		const number = [...Array(count).keys()];
+		for (let index = number.length - 1; index > 0; index--) {
+			const randomIndex = Math.floor(Math.random() * (index + 1));
+			[number[index], number[randomIndex]] = [number[randomIndex], number[index]];
+		}
+		return number;
+	},
+};
+
 controller.generateCards();
 
-document.querySelectorAll('.back').forEach(card => {
-	card.addEventListener('click', e => {
-		const parentElement = card.parentElement;
+document.querySelectorAll('.back').forEach(back => {
+	back.addEventListener('click', e => {
+		const parentElement = back.parentElement;
 		controller.dispatchCardAction(parentElement);
 	});
 });
