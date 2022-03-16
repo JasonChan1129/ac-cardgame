@@ -64,7 +64,7 @@ const view = {
 	},
 	pairCards(...cards) {
 		cards.forEach(card => {
-			card.classList.add('paired');
+			card.querySelector('.front').classList.add('paired');
 		});
 	},
 	renderScore(score) {
