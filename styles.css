@@ -9,30 +9,52 @@
 	/* in terms of cards */
 	flex: 7% 1 1;
 	/* in terms of card */
-	display: flex;
-	flex-direction: column;
-	justify-content: space-around;
+	position: relative;
 	height: 8vw;
 	margin: 2px;
 	border: 2px solid #e0e0e0;
 	box-sizing: border-box;
+	transform-style: preserve-3d;
+	transition: all 1s ease;
+	z-index: 100;
 }
 
-.card img {
+/* .card:hover {
+	transform: rotateY(180deg);
+} */
+
+.front {
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden; /* Safari */
+	transform: rotateY(180deg);
+}
+
+.front img {
 	align-self: center;
 	max-width: 30%;
 }
 
-.card p {
+.front p {
 	margin: 3px;
 	font-size: 10px;
 }
 
-.card p:last-child {
+.front p:last-child {
 	transform: rotate(180deg);
 }
 
 .back {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	-webkit-backface-visibility: hidden; /* Safari */
 	background: url('https://assets-lighthouse.alphacamp.co/uploads/image/file/9222/ExportedContentImage_00.png');
 	background-size: cover;
 }

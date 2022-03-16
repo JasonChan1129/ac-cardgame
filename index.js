@@ -14,18 +14,21 @@ const Symbols = [
 ];
 
 const view = {
-	getCardContent(index) {
+	getCardElement(index) {
 		const number = this.transformNumber((index % 13) + 1);
 		const symbol = Symbols[Math.floor(index / 13)];
-		return `            
-            <p>${number}</p>
-                <img
-                    src=${symbol}
-                />
-            <p>${number}</p>`;
-	},
-	getCardElement(index) {
-		return `<div class="card back" data-index=${index}></div>`;
+		return `
+		<div class="card" data-index=${index}>
+			<div class="front">
+				<p>${number}</p>
+					<img
+						src=${symbol}
+					/>
+				<p>${number}</p>
+			</div>
+			<div class="back"></div>
+		</div>
+		`;
 	},
 	transformNumber(number) {
 		switch (number) {
@@ -49,19 +52,29 @@ const view = {
 			})
 			.join('');
 	},
-	flipCards(...cards) {
+	flipToFront(...cards) {
 		cards.forEach(card => {
-			if (card.classList.contains('back')) {
-				// flip to front
-				card.classList.remove('back');
-				card.innerHTML = this.getCardContent(Number(card.dataset.index));
-			} else {
-				// flip to back
-				card.classList.add('back');
-				card.innerHTML = null;
-			}
+			card.style.transform = 'rotateY(180deg)';
 		});
 	},
+	flipToBack(...cards) {
+		cards.forEach(card => {
+			card.style.transform = 'rotateY(360deg)';
+		});
+	},
+	// flipCards(...cards) {
+	// 	cards.forEach(card => {
+	// 		if (card.classList.contains('back')) {
+	// 			// flip to front
+	// 			card.classList.remove('back');
+	// 			card.innerHTML = this.getCardContent(Number(card.dataset.index));
+	// 		} else {
+	// 			// flip to back
+	// 			card.classList.add('back');
+	// 			card.innerHTML = null;
+	// 		}
+	// 	});
+	// },
 	pairCards(...cards) {
 		cards.forEach(card => {
 			card.classList.add('paired');
@@ -127,18 +140,18 @@ const controller = {
 	},
 	dispatchCardAction(card) {
 		// if card has already been opened
-		if (!card.classList.contains('back')) {
-			return;
-		}
+		// if (!card.classList.contains('back')) {
+		// 	return;
+		// }
 		switch (this.currentState) {
 			case GAME_STATE.FirstCardAwaits:
-				view.flipCards(card);
+				view.flipToFront(card);
 				model.revealedCards.push(card);
 				this.currentState = GAME_STATE.SecondCardAwaits;
 				break;
 			case GAME_STATE.SecondCardAwaits:
 				view.renderTimes(++model.triedTimes);
-				view.flipCards(card);
+				view.flipToFront(card);
 				model.revealedCards.push(card);
 				if (model.isRevealedCardsMatched()) {
 					// if match
@@ -164,7 +177,7 @@ const controller = {
 		console.log(model.score, model.triedTimes);
 	},
 	resetCards() {
-		view.flipCards(...model.revealedCards);
+		view.flipToBack(...model.revealedCards);
 		model.revealedCards = [];
 		controller.currentState = GAME_STATE.FirstCardAwaits;
 	},
@@ -172,9 +185,10 @@ const controller = {
 
 controller.generateCards();
 
-document.querySelectorAll('.card').forEach(card => {
+document.querySelectorAll('.back').forEach(card => {
 	card.addEventListener('click', e => {
-		controller.dispatchCardAction(card);
+		const parentElement = card.parentElement;
+		controller.dispatchCardAction(parentElement);
 	});
 });
 
